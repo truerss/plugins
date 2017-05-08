@@ -1,6 +1,6 @@
 
 
-### base-plugin
+### base
 
 Base Plugin for all TrueRSS plugins.
 

@@ -24,10 +24,9 @@ val basePlugin = Project(
   pomExtra := pomXml,
   publishArtifact in Test := false,
   libraryDependencies ++= Seq("com.typesafe" % "config" % "1.3.0")
-)
+).disablePlugins(sbtassembly.AssemblyPlugin)
 
-def pomXml =
-  (<url>https://github.com/truerss/plugins</url>
+def pomXml = <url>https://github.com/truerss/plugins</url>
     <scm>
       <url>git@github.com:truerss/plugins.git</url>
       <connection>scm:git:git@github.com:truerss/plugins.git</connection>
@@ -38,7 +37,7 @@ def pomXml =
         <name>mike</name>
         <url>https://github.com/fntz</url>
       </developer>
-    </developers>)
+    </developers>;
 
 val basePluginDeps =  "com.github.truerss" %% "base" % "0.0.6"  % "provided"
 
