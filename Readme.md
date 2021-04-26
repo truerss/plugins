@@ -44,7 +44,7 @@ TumblrPlugin = {
 ```
 
 
-### truerss-youtube-plugin
+### truerss-youtube-plugin (moved to truerss main repo)
 
 Embed Youtube Video.
 

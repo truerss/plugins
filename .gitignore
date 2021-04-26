@@ -4,7 +4,7 @@ target
 
 *.class
 *.log
-
+.bsp
 .cache/
 .history/
 .lib/
