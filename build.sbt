@@ -1,4 +1,21 @@
 
+ThisBuild / version := "1.0.0"
+ThisBuild / organization := "io.github.truerss"
+sonatypeRepository := "https://s01.oss.sonatype.org/service/local"
+sonatypeCredentialHost := "s01.oss.sonatype.org"
+ThisBuild / publishTo := {
+  val nexus = "https://s01.oss.sonatype.org/"
+  if (isSnapshot.value)
+    Some("snapshots" at nexus + "content/repositories/snapshots/")
+  else
+    Some("releases" at nexus + "service/local/staging/deploy/maven2")
+}
+
+ThisBuild / homepage := Some(url("https://github.com/truerss/truerss"))
+ThisBuild / scmInfo := Some(ScmInfo(url("https://github.com/truerss/plugins"), "git@github.com:truerss/plugins.git"))
+ThisBuild / developers := List(Developer("mike", "mike", "mike.fch1@gmail.com", url("https://github.com/fntz")))
+ThisBuild / licenses += ("MIT", url("http://opensource.org/licenses/MIT"))
+
 val basePluginSetting = Seq(
   scalacOptions ++= Seq(
     "-Xlog-free-terms",
@@ -7,19 +24,16 @@ val basePluginSetting = Seq(
   )
 )
 
+
 val basePlugin = Project(
   id = "base",
   base = file("base")
 ).settings(basePluginSetting : _*).settings(
-  organization := "io.github.truerss",
   name := "base",
-  version := "0.0.6",
   scalaVersion := "2.12.4",
   crossScalaVersions := Seq("2.12.4"),
-  licenses += ("MIT", url("http://opensource.org/licenses/MIT")),
-  publishMavenStyle := true,
   Test / publishArtifact := false,
-  libraryDependencies ++= Seq("com.typesafe" % "config" % "1.3.0")
+  libraryDependencies ++= Seq("com.typesafe" % "config" % "1.4.1")
 ).disablePlugins(sbtassembly.AssemblyPlugin)
 
 val pluginSettings = Seq(
@@ -44,7 +58,7 @@ lazy val redditImageViewerPlugin =
   plugin("truerss-reddit-imageviewer-plugin")
   .settings(
     libraryDependencies ++= Seq(
-      "com.typesafe" % "config" % "1.3.0",
+      "com.typesafe" % "config" % "1.4.1",
       "org.jsoup" % "jsoup" % "1.8.3",
       "org.scalaj" %% "scalaj-http" % "2.3.0"
     )
@@ -54,7 +68,7 @@ lazy val stackoverflowPlugin =
   plugin("truerss-stackoverflow-plugin")
   .settings(
     libraryDependencies ++= Seq(
-      "com.typesafe" % "config" % "1.3.0",
+      "com.typesafe" % "config" % "1.4.1",
       "org.jsoup" % "jsoup" % "1.8.3" % "provided"
     )
   )
@@ -62,7 +76,7 @@ lazy val stackoverflowPlugin =
 lazy val tumblrPlugin = plugin("truerss-tumblr-plugin")
   .settings(
     libraryDependencies ++= Seq(
-      "com.typesafe" % "config" % "1.3.0" % "provided",
+      "com.typesafe" % "config" % "1.4.1" % "provided",
       "com.tumblr" % "jumblr" % "0.0.11"
     )
   )
@@ -70,13 +84,16 @@ lazy val tumblrPlugin = plugin("truerss-tumblr-plugin")
 lazy val youtubePlugin = plugin("truerss-youtube-plugin")
   .settings(
     libraryDependencies ++= Seq(
-      "com.typesafe" % "config" % "1.3.0"
+      "com.typesafe" % "config" % "1.4.1"
     )
   )
 
 lazy val publishPlugin = plugin("truerss-publish-plugin")
   .settings(
-    libraryDependencies ++= Seq()
+    libraryDependencies ++= Seq(
+      "com.typesafe" % "config" % "1.4.1",
+      "com.dorkbox" % "Notify" % "3.7"
+    )
   )
 
 lazy val mainPlugin = Project(

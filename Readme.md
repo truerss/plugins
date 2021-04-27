@@ -43,6 +43,16 @@ TumblrPlugin = {
 }
 ```
 
+# truerss-notifier-plugin
+
+Push notification about new entries.
+
+```
+TrueRSSNotifierPlugin {
+  position = "top-right" // top-left, top-right, center, bottom-left, bottom-right 
+  dark = false           // or true
+}
+```
 
 ### truerss-youtube-plugin (moved to truerss main repo)
 

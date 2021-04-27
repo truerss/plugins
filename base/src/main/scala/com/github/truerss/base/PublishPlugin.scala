@@ -2,8 +2,8 @@ package com.github.truerss.base
 
 object PublishActions {
   sealed trait Action
-  case object Favorite extends Action
-  case object NewEntries extends Action
+  case class Favorite(entry: Entry) extends Action
+  case class NewEntries(entries: Iterable[Entry]) extends Action
 }
 
 trait PublishPlugin {
@@ -11,6 +11,6 @@ trait PublishPlugin {
 
   import PublishActions._
 
-  def publish(action: Action, entry: Entry): Unit
+  def publish(action: Action): Unit
 
 }

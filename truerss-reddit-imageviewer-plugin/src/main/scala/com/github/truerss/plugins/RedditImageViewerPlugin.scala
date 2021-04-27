@@ -33,7 +33,7 @@ class RedditImageViewerPlugin(config: Config = ConfigFactory.empty())
 
   private val need = catching(classOf[Exception]) either config.getConfig(pluginName).withFallback(defaultConfig) fold(
     _ => defaultConfig,
-    c => c
+    identity
   )
 
   private val configKey = "r"
