@@ -1,7 +1,7 @@
 
 ThisBuild / scalaVersion := "2.13.5"
 
-ThisBuild / version := "1.0.0"
+ThisBuild / version := "1.0.1"
 ThisBuild / organization := "io.github.truerss"
 sonatypeRepository := "https://s01.oss.sonatype.org/service/local"
 sonatypeCredentialHost := "s01.oss.sonatype.org"
