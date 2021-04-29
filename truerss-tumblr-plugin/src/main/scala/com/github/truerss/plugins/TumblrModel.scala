@@ -121,7 +121,7 @@ object TumblrModel {
 
 
   object Converter {
-    import scala.collection.JavaConversions._
+    import scala.jdk.CollectionConverters._
     def convert(x: P): Post = {
       //text, quote, link, answer, video, audio, photo, chat
       x.getType.toLowerCase match {
@@ -143,7 +143,7 @@ object TumblrModel {
 
         case "video" =>
           val t = x.asInstanceOf[VP]
-          val v = t.getVideos.map(v => Player(v.getWidth, v.getEmbedCode)).toVector
+          val v = t.getVideos.asScala.map(v => Player(v.getWidth, v.getEmbedCode)).toVector
           VideoPost(t.getCaption, v)
 
         case "audio" =>
@@ -152,14 +152,14 @@ object TumblrModel {
 
         case "photo" =>
           val t = x.asInstanceOf[PP]
-          val p = t.getPhotos.map { x => Image(Some(t.getCaption),
-            x.getSizes.map(r => Size(r.getWidth, r.getHeight, r.getUrl)).toVector)}
+          val p = t.getPhotos.asScala.map { x => Image(Some(t.getCaption),
+            x.getSizes.asScala.map(r => Size(r.getWidth, r.getHeight, r.getUrl)).toVector)}
           .toVector
           PhotoPost(p, t.getCaption)
 
         case "chat" =>
           val t = x.asInstanceOf[CP]
-          val d = t.getDialogue.map(x => Dialogue(x.getName, x.getLabel, x.getPhrase)).toVector
+          val d = t.getDialogue.asScala.map(x => Dialogue(x.getName, x.getLabel, x.getPhrase)).toVector
           ChatPost(t.getTitle, t.getBody, d)
       }
     }

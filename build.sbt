@@ -1,4 +1,6 @@
 
+ThisBuild / scalaVersion := "2.13.5"
+
 ThisBuild / version := "1.0.0"
 ThisBuild / organization := "io.github.truerss"
 sonatypeRepository := "https://s01.oss.sonatype.org/service/local"
@@ -32,8 +34,6 @@ val basePlugin = Project(
   base = file("base")
 ).settings(basePluginSetting : _*).settings(
   name := "base",
-  scalaVersion := "2.12.4",
-  crossScalaVersions := Seq("2.12.4"),
   Test / publishArtifact := false,
   libraryDependencies ++= Seq(config)
 ).disablePlugins(sbtassembly.AssemblyPlugin)
@@ -42,7 +42,6 @@ val pluginSettings = Seq(
   assembly / assemblyOption := (assembly / assemblyOption).value.copy(includeScala = false),
   organization := "io.github.truerss",
   version := "0.0.3",
-  scalaVersion := "2.12.4",
   licenses += ("MIT", url("http://opensource.org/licenses/MIT"))
 )
 

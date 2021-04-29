@@ -2,12 +2,10 @@ package com.github.truerss.plugins
 
 import com.github.truerss.base.{BasePublishPlugin, Entry, PublishActions}
 import com.typesafe.config.{Config, ConfigFactory}
-import dorkbox.notify.{Notify, Pos}
+import dorkbox.notify.Pos
 
 import java.util
-import java.util.{Collections, Timer, TimerTask}
-import java.util.concurrent.atomic.AtomicReference
-import java.util.concurrent.locks.ReentrantLock
+import java.util.concurrent.{Executors, ThreadFactory, TimeUnit}
 import scala.util.control.Exception.catching
 
 class TrueRSSNotifierPlugin(config: Config = ConfigFactory.empty()) extends BasePublishPlugin(config) {
@@ -28,123 +26,74 @@ class TrueRSSNotifierPlugin(config: Config = ConfigFactory.empty()) extends Base
     identity
   )
 
-  private val position = getPosition(need)
-
+  private val position = getPosition
+  private val mode = isDark
+  private val currentNotifier = OsNotification(position, mode)
   private val current = new java.util.Vector[Entry]()
-  private val timer = new Timer(s"$pluginName-timer")
-  @volatile private var timerTask: TimerTask = null
-  private val lock = new ReentrantLock()
-  private val delay = 30*1000
+  private val every = 30
+  private val exec = Executors.newSingleThreadScheduledExecutor(
+    new TrueRSSNotifierThreadFactory
+  )
+  exec.scheduleAtFixedRate(new Runnable {
+    override def run(): Unit = {
+      tryToPublish()
+    }
+  }, 0, every, TimeUnit.SECONDS)
 
   override def publish(action: PublishActions.Action): Unit = {
     action match {
       case PublishActions.NewEntries(xs) =>
-        lock.lock()
-        try {
-          Option(timerTask) match {
-            case Some(_) =>
-              current.addAll(toJava(xs))
-
-            case _ =>
-              timerTask = newTimerTask(commandText)
-              timer.schedule(timerTask, delay)
-          }
-        } finally {
-          lock.unlock()
-        }
+        current.addAll(toJava(xs))
 
       case _ =>
         // ignored in this plugin
     }
   }
 
-  private def newTimerTask(commandText: Seq[String]): TimerTask = {
-    new TimerTask {
-      override def run(): Unit = {
-        println(s"----------> ${current.size()}")
-        current.removeAllElements()
-        runCommandOrDefault(commandText)
-        clean
-      }
-    }
-  }
-
-  private def clean: Unit = {
-    timerTask = null
-  }
-
-  private def runCommandOrDefault(commandText: Seq[String]): Unit = {
-    if (commandText.nonEmpty) {
-      pushDefaultNotification()
-    } else {
+  private def tryToPublish(): Unit = {
+    if (!current.isEmpty) {
       try {
-        // try to use notify-send lib
-        val builder = new ProcessBuilder()
-        val command = builder.command(commandText : _*)
-        command.start().waitFor()
+        currentNotifier.push()
       } catch {
-        // when not available
         case _: Throwable =>
-          pushDefaultNotification()
+          OsNotification.pushDefault(position, mode)
+      } finally {
+          current.clear()
       }
     }
-
   }
 
-  private def pushDefaultNotification(): Unit = {
-    val notify = Notify.create()
-      .title(title)
-      .text(text)
-      .position(position)
-    if (isDark) {
-      notify.darkStyle()
-    }
-    notify.showInformation()
+  private def getPosition: Pos = {
+    positionMap.getOrElse(
+      need.getString("position").toLowerCase.trim, Pos.TOP_RIGHT
+    )
   }
 
-  def isDark: Boolean = {
+  private def isDark: Boolean = {
     need.getBoolean("dark")
   }
 
 }
 
 object TrueRSSNotifierPlugin {
-  val title = "TrueRSS"
-  val text = "New Entries Received."
-  val linuxNotify = Seq("notify-send", title, text)
 
-  val macOsNotify = Seq("osascript", "-e", s"'display notification $text with title $title'")
-
-  def getPosition(c: Config): Pos = {
-    c.getString("position").toLowerCase.trim match {
-      case "top-left" => Pos.TOP_LEFT
-      case "top-right" => Pos.TOP_RIGHT
-      case "center" => Pos.CENTER
-      case "bottom-left" => Pos.BOTTOM_LEFT
-      case "bottom-right" => Pos.BOTTOM_RIGHT
-      case _ => Pos.TOP_LEFT
-    }
-  }
-
-  def commandText: Seq[String] = {
-    Option(System.getProperty("os.name")) match {
-      case Some("Linux") =>
-        linuxNotify
-
-      case Some("MacOs") =>
-        macOsNotify
-
-      case Some("Windows") =>
-        Seq.empty
-
-      case _ =>
-        Seq.empty
-    }
-  }
+  val positionMap = Map(
+    "top-left" -> Pos.TOP_LEFT,
+    "top-right" -> Pos.TOP_RIGHT,
+    "center" -> Pos.CENTER,
+    "bottom-left" -> Pos.BOTTOM_LEFT,
+    "bottom-right" -> Pos.BOTTOM_RIGHT
+  )
 
   def toJava(xs: Iterable[Entry]): java.util.Collection[Entry] = {
     val col = new util.ArrayList[Entry](xs.size)
     xs.foreach(col.add)
     col
+  }
+
+  class TrueRSSNotifierThreadFactory extends ThreadFactory {
+    override def newThread(r: Runnable): Thread = {
+      new Thread(r, "truerss-notifier")
+    }
   }
 }

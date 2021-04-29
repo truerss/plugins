@@ -1,16 +1,17 @@
 package com.github.truerss.plugins
 
-import com.github.truerss.base.ContentTypeParam.{HtmlRequest, UrlRequest, RequestParam}
+import com.github.truerss.base.ContentTypeParam.{HtmlRequest, RequestParam, UrlRequest}
 import org.jsoup.Jsoup
+
 import scala.util.control.Exception._
-import com.github.truerss.base.{ContentTypeParam, Text, BaseContentPlugin, Errors}
+import com.github.truerss.base.{BaseContentPlugin, ContentTypeParam, Errors, Text}
 import com.typesafe.config.{Config, ConfigFactory}
+
 import java.net.URL
+import scala.jdk.CollectionConverters._
 
 class StackoverflowPlugin(config: Config = ConfigFactory.empty())
   extends BaseContentPlugin(config) {
-
-  import scala.collection.JavaConversions._
 
   import Errors._
 
@@ -92,7 +93,7 @@ class StackoverflowPlugin(config: Config = ConfigFactory.empty())
             }
           } else {
             if (need.getBoolean(allAnswers)) {
-              val answers = a.map { a =>
+              val answers = a.asScala.map { a =>
                 val style = if (a.hasClass(accepted)) {
                   acceptStyle
                 } else {
