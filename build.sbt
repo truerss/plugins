@@ -41,7 +41,6 @@ val basePlugin = Project(
 val pluginSettings = Seq(
   assembly / assemblyOption := (assembly / assemblyOption).value.copy(includeScala = false),
   organization := "io.github.truerss",
-  version := "0.0.3",
   licenses += ("MIT", url("http://opensource.org/licenses/MIT"))
 )
 
@@ -49,6 +48,7 @@ def plugin(pluginName: String): Project = Project(
   id = pluginName,
   base = file(pluginName)
 ).settings(
+  assembly / target := file("."),
   pluginSettings ++ Seq(
     name := pluginName,
     assembly / assemblyJarName := s"$pluginName.jar"
@@ -58,6 +58,7 @@ def plugin(pluginName: String): Project = Project(
 lazy val redditImageViewerPlugin =
   plugin("truerss-reddit-imageviewer-plugin")
   .settings(
+    version := "1.0.0",
     libraryDependencies ++= Seq(
       config,
       jsoup,
@@ -68,11 +69,13 @@ lazy val redditImageViewerPlugin =
 lazy val stackoverflowPlugin =
   plugin("truerss-stackoverflow-plugin")
   .settings(
+    version := "1.0.0",
     libraryDependencies ++= Seq(config, jsoup)
   )
 
 lazy val tumblrPlugin = plugin("truerss-tumblr-plugin")
   .settings(
+    version := "1.0.0",
     libraryDependencies ++= Seq(
       config,
       "com.tumblr" % "jumblr" % "0.0.11"
@@ -81,11 +84,13 @@ lazy val tumblrPlugin = plugin("truerss-tumblr-plugin")
 
 lazy val youtubePlugin = plugin("truerss-youtube-plugin")
   .settings(
+    version := "1.0.0",
     libraryDependencies ++= Seq(config)
   )
 
 lazy val publishPlugin = plugin("truerss-publish-plugin")
   .settings(
+    version := "1.0.0",
     libraryDependencies ++= Seq(
       config,
       "com.dorkbox" % "Notify" % "3.7"
