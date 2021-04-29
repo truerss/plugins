@@ -24,6 +24,8 @@ val basePluginSetting = Seq(
   )
 )
 
+val config = "com.typesafe" % "config" % "1.4.1"
+val jsoup = "org.jsoup" % "jsoup" % "1.8.3"
 
 val basePlugin = Project(
   id = "base",
@@ -33,7 +35,7 @@ val basePlugin = Project(
   scalaVersion := "2.12.4",
   crossScalaVersions := Seq("2.12.4"),
   Test / publishArtifact := false,
-  libraryDependencies ++= Seq("com.typesafe" % "config" % "1.4.1")
+  libraryDependencies ++= Seq(config)
 ).disablePlugins(sbtassembly.AssemblyPlugin)
 
 val pluginSettings = Seq(
@@ -58,40 +60,35 @@ lazy val redditImageViewerPlugin =
   plugin("truerss-reddit-imageviewer-plugin")
   .settings(
     libraryDependencies ++= Seq(
-      "com.typesafe" % "config" % "1.4.1",
-      "org.jsoup" % "jsoup" % "1.8.3",
-      "org.scalaj" %% "scalaj-http" % "2.3.0"
+      config,
+      jsoup,
+      "org.scalaj" %% "scalaj-http" % "2.4.2"
     )
   )
 
 lazy val stackoverflowPlugin =
   plugin("truerss-stackoverflow-plugin")
   .settings(
-    libraryDependencies ++= Seq(
-      "com.typesafe" % "config" % "1.4.1",
-      "org.jsoup" % "jsoup" % "1.8.3" % "provided"
-    )
+    libraryDependencies ++= Seq(config, jsoup)
   )
 
 lazy val tumblrPlugin = plugin("truerss-tumblr-plugin")
   .settings(
     libraryDependencies ++= Seq(
-      "com.typesafe" % "config" % "1.4.1" % "provided",
+      config,
       "com.tumblr" % "jumblr" % "0.0.11"
     )
   )
 
 lazy val youtubePlugin = plugin("truerss-youtube-plugin")
   .settings(
-    libraryDependencies ++= Seq(
-      "com.typesafe" % "config" % "1.4.1"
-    )
+    libraryDependencies ++= Seq(config)
   )
 
 lazy val publishPlugin = plugin("truerss-publish-plugin")
   .settings(
     libraryDependencies ++= Seq(
-      "com.typesafe" % "config" % "1.4.1",
+      config,
       "com.dorkbox" % "Notify" % "3.7"
     )
   )
