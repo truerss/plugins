@@ -1,15 +1,23 @@
 package com.github.truerss.plugins
 
-
 /*
 text, quote, link, answer, video, audio, photo, chat
  */
 
 object TumblrModel {
 
-  import com.tumblr.jumblr.types.{Post => P, Dialogue => D,
-  TextPost => TP, QuotePost => QP, LinkPost => LP, AnswerPost => AP,
-  VideoPost => VP, AudioPost => AuP, PhotoPost => PP, ChatPost => CP}
+  import com.tumblr.jumblr.types.{
+    Post => P,
+    Dialogue => D,
+    TextPost => TP,
+    QuotePost => QP,
+    LinkPost => LP,
+    AnswerPost => AP,
+    VideoPost => VP,
+    AudioPost => AuP,
+    PhotoPost => PP,
+    ChatPost => CP
+  }
 
   sealed trait PostType
   case object Text extends PostType
@@ -21,7 +29,6 @@ object TumblrModel {
   case object Photo extends PostType
   case object Chat extends PostType
 
-
   sealed trait PostFormat
   case object Html extends PostFormat
   case object Markdown extends PostFormat
@@ -30,8 +37,7 @@ object TumblrModel {
     def html: String
   }
 
-  case class TextPost(title: String,
-                      body: String) extends Post {
+  case class TextPost(title: String, body: String) extends Post {
     override def html = {
       s"<h3>$title</h3><p>$body</p>"
     }
@@ -40,15 +46,14 @@ object TumblrModel {
   case class Size(width: Int, height: Int, url: String)
   case class Image(caption: Option[String], alt_sizes: Vector[Size])
 
-  case class PhotoPost(
-                        photos: Vector[Image],
-                        caption: String
-                      ) extends Post {
+  case class PhotoPost(photos: Vector[Image], caption: String) extends Post {
     override def html = {
-      val p = photos.map { photo =>
-        val sz = photo.alt_sizes.head
-        s"""<img src=${sz.url} width='${sz.width}' height='${sz.height}' />"""
-      }.mkString("<br/>")
+      val p = photos
+        .map { photo =>
+          val sz = photo.alt_sizes.head
+          s"""<img src=${sz.url} width='${sz.width}' height='${sz.height}' />"""
+        }
+        .mkString("<br/>")
       s"""
         <h3>${caption}</h3>
         <div>${p}</div>
@@ -56,19 +61,12 @@ object TumblrModel {
     }
   }
 
-  case class QuotePost(
-                        text: String,
-                        source: String
-                      ) extends Post {
+  case class QuotePost(text: String, source: String) extends Post {
     override def html = {
       s"<blockquote>${text}</blockquote><city>${source}</city>"
     }
   }
-  case class LinkPost(
-                       title: String,
-                       url: String,
-                       description: String
-                     ) extends Post {
+  case class LinkPost(title: String, url: String, description: String) extends Post {
     override def html = {
       s"<h3><a href='$url'>$title</a></h3><p>$description</p>"
     }
@@ -76,21 +74,13 @@ object TumblrModel {
 
   case class Dialogue(name: String, label: String, phrase: String)
 
-  case class ChatPost(
-                       title: String,
-                       body: String,
-                       dialogue: Vector[Dialogue]
-                     ) extends Post {
+  case class ChatPost(title: String, body: String, dialogue: Vector[Dialogue]) extends Post {
     override def html = {
       s"<h3>$title</h3><p>$body</p>"
     }
   }
 
-
-  case class AudioPost(
-                        caption: String,
-                        player: String
-                      ) extends Post {
+  case class AudioPost(caption: String, player: String) extends Post {
     override def html = {
       s"<h3>$caption</h3><div>$player</div>"
     }
@@ -98,27 +88,19 @@ object TumblrModel {
 
   case class Player(width: Int, embed_code: String)
 
-  case class VideoPost(
-                        caption: String,
-                        player: Vector[Player]
-                      ) extends Post {
+  case class VideoPost(caption: String, player: Vector[Player]) extends Post {
     override def html = {
       val p = player.maxBy(_.width).embed_code
       s"<h3>$caption</h3><div>$p</div>"
     }
   }
 
-  case class AnswerPost(
-                         asking_name: String,
-                         asking_url: String,
-                         question: String,
-                         answer: String
-                       ) extends Post {
+  case class AnswerPost(asking_name: String, asking_url: String, question: String, answer: String)
+      extends Post {
     override def html = {
       s"<p><span>$asking_name</span><p>$question</p></p><div>$answer</div>"
     }
   }
-
 
   object Converter {
     import scala.jdk.CollectionConverters._
@@ -152,21 +134,21 @@ object TumblrModel {
 
         case "photo" =>
           val t = x.asInstanceOf[PP]
-          val p = t.getPhotos.asScala.map { x => Image(Some(t.getCaption),
-            x.getSizes.asScala.map(r => Size(r.getWidth, r.getHeight, r.getUrl)).toVector)}
-          .toVector
+          val p = t.getPhotos.asScala.map { x =>
+            Image(
+              Some(t.getCaption),
+              x.getSizes.asScala.map(r => Size(r.getWidth, r.getHeight, r.getUrl)).toVector
+            )
+          }.toVector
           PhotoPost(p, t.getCaption)
 
         case "chat" =>
           val t = x.asInstanceOf[CP]
-          val d = t.getDialogue.asScala.map(x => Dialogue(x.getName, x.getLabel, x.getPhrase)).toVector
+          val d =
+            t.getDialogue.asScala.map(x => Dialogue(x.getName, x.getLabel, x.getPhrase)).toVector
           ChatPost(t.getTitle, t.getBody, d)
       }
     }
   }
 
-
 }
-
-
-

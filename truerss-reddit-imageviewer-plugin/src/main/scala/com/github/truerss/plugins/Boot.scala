@@ -3,8 +3,7 @@ package com.github.truerss.plugins
 import com.github.truerss.base.ContentTypeParam.RequestParam
 import org.jsoup.Jsoup
 
-/**
-  * Created by mike on 5.1.16.
+/** Created by mike on 5.1.16.
   */
 object Boot extends App {
 
@@ -14,7 +13,8 @@ object Boot extends App {
 
   import scalaj.http._
 
-  val response = scalaj.http.Http(url)
+  val response = scalaj.http
+    .Http(url)
     .option(HttpOptions.connTimeout(6000))
     .option(HttpOptions.readTimeout(6000))
     .option(HttpOptions.allowUnsafeSSL)

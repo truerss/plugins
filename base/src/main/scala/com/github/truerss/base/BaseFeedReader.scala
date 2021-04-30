@@ -7,11 +7,9 @@ trait BaseFeedReader {
 
   import Errors.Error
 
-  /**
-   * Return list of last entries for given site
-   * @param url
-   * @return List[Entry]
-   */
+  /** Return list of last entries for given site
+    * @param url
+    * @return List[Entry]
+    */
   def newEntries(url: String): Either[Error, Vector[Entry]]
 }
-

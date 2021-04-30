@@ -8,7 +8,8 @@ import java.util
 import java.util.concurrent.{Executors, ThreadFactory, TimeUnit}
 import scala.util.control.Exception.catching
 
-class TrueRSSNotifierPlugin(config: Config = ConfigFactory.empty()) extends BasePublishPlugin(config) {
+class TrueRSSNotifierPlugin(config: Config = ConfigFactory.empty())
+    extends BasePublishPlugin(config) {
 
   import TrueRSSNotifierPlugin._
 
@@ -18,10 +19,13 @@ class TrueRSSNotifierPlugin(config: Config = ConfigFactory.empty()) extends Base
   override val version: String = "0.0.1"
 
   private val defaultConfig =
-    ConfigFactory.load(getClass.getClassLoader, "default")
-    .getConfig(pluginName)
+    ConfigFactory
+      .load(getClass.getClassLoader, "default")
+      .getConfig(pluginName)
 
-  private val need = catching(classOf[Exception]) either config.getConfig(pluginName).withFallback(defaultConfig) fold(
+  private val need = catching(classOf[Exception]) either config
+    .getConfig(pluginName)
+    .withFallback(defaultConfig) fold (
     _ => defaultConfig,
     identity
   )
@@ -31,14 +35,17 @@ class TrueRSSNotifierPlugin(config: Config = ConfigFactory.empty()) extends Base
   private val currentNotifier = OsNotification(position, mode)
   private val current = new java.util.Vector[Entry]()
   private val every = 30
-  private val exec = Executors.newSingleThreadScheduledExecutor(
-    new TrueRSSNotifierThreadFactory
+  private val exec = Executors.newSingleThreadScheduledExecutor(new TrueRSSNotifierThreadFactory)
+  exec.scheduleAtFixedRate(
+    new Runnable {
+      override def run(): Unit = {
+        tryToPublish()
+      }
+    },
+    0,
+    every,
+    TimeUnit.SECONDS
   )
-  exec.scheduleAtFixedRate(new Runnable {
-    override def run(): Unit = {
-      tryToPublish()
-    }
-  }, 0, every, TimeUnit.SECONDS)
 
   override def publish(action: PublishActions.Action): Unit = {
     action match {
@@ -46,7 +53,7 @@ class TrueRSSNotifierPlugin(config: Config = ConfigFactory.empty()) extends Base
         current.addAll(toJava(xs))
 
       case _ =>
-        // ignored in this plugin
+      // ignored in this plugin
     }
   }
 
@@ -58,15 +65,13 @@ class TrueRSSNotifierPlugin(config: Config = ConfigFactory.empty()) extends Base
         case _: Throwable =>
           OsNotification.pushDefault(position, mode)
       } finally {
-          current.clear()
+        current.clear()
       }
     }
   }
 
   private def getPosition: Pos = {
-    positionMap.getOrElse(
-      need.getString("position").toLowerCase.trim, Pos.TOP_RIGHT
-    )
+    positionMap.getOrElse(need.getString("position").toLowerCase.trim, Pos.TOP_RIGHT)
   }
 
   private def isDark: Boolean = {

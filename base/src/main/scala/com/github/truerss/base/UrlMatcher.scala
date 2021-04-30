@@ -5,4 +5,3 @@ import java.net.URL
 trait UrlMatcher {
   def matchUrl(url: URL): Boolean
 }
-

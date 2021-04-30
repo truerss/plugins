@@ -19,7 +19,8 @@ object OsNotification {
   val text = "New Entries Received."
 
   def pushDefault(position: Pos, isDark: Boolean): Unit = {
-    val notify = Notify.create()
+    val notify = Notify
+      .create()
       .title(title)
       .text(text)
       .position(position)
@@ -35,7 +36,7 @@ object OsNotification {
         Linux(pos, mode)
 
       case Some("MacOs") =>
-         MacOs(pos, mode)
+        MacOs(pos, mode)
 
       case Some("Windows") =>
         Windows(pos, mode)
@@ -50,15 +51,14 @@ object OsNotification {
   }
 }
 
-case class Linux(position: Pos,
-                 isDark: Boolean) extends OsNotification {
+case class Linux(position: Pos, isDark: Boolean) extends OsNotification {
   import OsNotification._
 
   private val commandText = Seq(Linux.command, title, text)
 
   override def push(): Unit = {
     val builder = new ProcessBuilder()
-    val command = builder.command(commandText : _*)
+    val command = builder.command(commandText: _*)
     command.start().waitFor()
   }
 }
@@ -66,8 +66,7 @@ object Linux {
   val command = "notify-send"
 }
 
-case class Windows(position: Pos,
-                   isDark: Boolean) extends OsNotification {
+case class Windows(position: Pos, isDark: Boolean) extends OsNotification {
   import OsNotification._
 
   override def push(): Unit = {
@@ -88,8 +87,7 @@ object Windows {
   val icon = "icon.png"
 }
 
-case class MacOs(position: Pos,
-                 isDark: Boolean) extends OsNotification {
+case class MacOs(position: Pos, isDark: Boolean) extends OsNotification {
   import OsNotification._
 
   private val command =

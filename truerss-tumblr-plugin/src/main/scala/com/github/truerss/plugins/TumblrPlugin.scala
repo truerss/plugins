@@ -10,8 +10,7 @@ import com.typesafe.config.{Config, ConfigFactory}
 
 import scala.util.control.Exception._
 
-class TumblrPlugin(config: Config = ConfigFactory.empty)
-  extends BaseContentPlugin(config) {
+class TumblrPlugin(config: Config = ConfigFactory.empty) extends BaseContentPlugin(config) {
 
   override val pluginName = "TumblrPlugin"
   override val author = "fntz <mike.fch1@gmail.com>"
@@ -24,7 +23,9 @@ class TumblrPlugin(config: Config = ConfigFactory.empty)
 
   private val apiKeyPath = "consumer_key"
 
-  val need = catching(classOf[Exception]) either config.getConfig(pluginName).withFallback(ConfigFactory.empty()) fold(
+  val need = catching(classOf[Exception]) either config
+    .getConfig(pluginName)
+    .withFallback(ConfigFactory.empty()) fold (
     _ => ConfigFactory.empty(),
     c => c
   )
@@ -62,8 +63,3 @@ class TumblrPlugin(config: Config = ConfigFactory.empty)
   }
 
 }
-
-
-
-
-

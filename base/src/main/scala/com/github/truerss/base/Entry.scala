@@ -9,5 +9,6 @@ case class Entry(
   publishedDate: Date,
   description: Option[String],
   content: Option[String],
-  forceUpdate: Boolean = false
+  forceUpdate: Boolean = false,
+  enclosure: Option[Enclosure]
 )
