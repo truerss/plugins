@@ -88,7 +88,7 @@ lazy val youtubePlugin = plugin("truerss-youtube-plugin")
     libraryDependencies ++= Seq(config)
   )
 
-lazy val publishPlugin = plugin("truerss-publish-plugin")
+lazy val notifyPlugin = plugin("truerss-notify-plugin")
   .settings(
     version := "1.0.0",
     libraryDependencies ++= Seq(
@@ -102,8 +102,9 @@ lazy val mainPlugin = Project(
   base = file(".")
 ).disablePlugins(sbtassembly.AssemblyPlugin).aggregate(
   basePlugin,
-  redditImageViewerPlugin.dependsOn(basePlugin),
-  stackoverflowPlugin.dependsOn(basePlugin),
-  tumblrPlugin.dependsOn(basePlugin),
-  youtubePlugin.dependsOn(basePlugin)
+  redditImageViewerPlugin,
+  stackoverflowPlugin,
+  tumblrPlugin,
+  youtubePlugin,
+  notifyPlugin
 )
