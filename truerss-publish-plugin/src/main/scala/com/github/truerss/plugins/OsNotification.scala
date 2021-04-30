@@ -92,12 +92,13 @@ case class MacOs(position: Pos,
                  isDark: Boolean) extends OsNotification {
   import OsNotification._
 
-  private val commandText =
-    Seq("osascript", "-e", s"'display notification $text with title $title'")
-
+  private val command =
+    s"""display notification "$text" with title "$title" """
+  // todo as in linux impl
   override def push(): Unit = {
-    val builder = new ProcessBuilder()
-    val command = builder.command(commandText : _*)
-    command.start().waitFor()
+    val runtime = Runtime.getRuntime
+    val code = Array("osascript", "-e", command)
+    val process = runtime.exec(code)
+    process.waitFor()
   }
 }
