@@ -11,7 +11,7 @@ import java.net.URL
 import scala.jdk.CollectionConverters._
 
 class StackoverflowPlugin(config: Config = ConfigFactory.empty())
-  extends BaseContentPlugin(config) {
+    extends BaseContentPlugin(config) {
 
   import Errors._
 
@@ -19,17 +19,14 @@ class StackoverflowPlugin(config: Config = ConfigFactory.empty())
   private val onlyBestAnswer = "onlyBestAnswer"
   private val allAnswers = "allAnswers"
 
-  /**
-   * Default setting:
-   *
-   * StackoverflowPlugin {
-   *   onlyQuestion = false
-   *   onlyBestAnswer = false
-   *   allAnswers = true
-   * }
-   *
-   *
-   */
+  /** Default setting:
+    *
+    * StackoverflowPlugin {
+    *   onlyQuestion = false
+    *   onlyBestAnswer = false
+    *   allAnswers = true
+    * }
+    */
 
   override val pluginName = "StackoverflowPlugin"
   override val author = "fntz <mike.fch1@gmail.com>"
@@ -38,10 +35,13 @@ class StackoverflowPlugin(config: Config = ConfigFactory.empty())
   override val contentTypeParam = ContentTypeParam.HTML
   override val priority = 10
 
-  val defaultConfig = ConfigFactory.load(getClass.getClassLoader, "default")
+  val defaultConfig = ConfigFactory
+    .load(getClass.getClassLoader, "default")
     .getConfig(pluginName)
 
-  val need = catching(classOf[Exception]) either config.getConfig(pluginName).withFallback(defaultConfig) fold(
+  val need = catching(classOf[Exception]) either config
+    .getConfig(pluginName)
+    .withFallback(defaultConfig) fold (
     _ => defaultConfig,
     c => c
   )
@@ -93,14 +93,16 @@ class StackoverflowPlugin(config: Config = ConfigFactory.empty())
             }
           } else {
             if (need.getBoolean(allAnswers)) {
-              val answers = a.asScala.map { a =>
-                val style = if (a.hasClass(accepted)) {
-                  acceptStyle
-                } else {
-                  simpleStyle
+              val answers = a.asScala
+                .map { a =>
+                  val style = if (a.hasClass(accepted)) {
+                    acceptStyle
+                  } else {
+                    simpleStyle
+                  }
+                  wrap(a.select(txtSelect).html(), style)
                 }
-                wrap(a.select(txtSelect).html(), style)
-              }.mkString(br)
+                .mkString(br)
               s"$question$answers"
             } else {
               s"$question"
@@ -264,8 +266,3 @@ class StackoverflowPlugin(config: Config = ConfigFactory.empty())
     """.stripMargin.split("\n")
 
 }
-
-
-
-
-

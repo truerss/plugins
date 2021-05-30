@@ -5,13 +5,17 @@ target
 *.jar
 *.class
 *.log
+.bloop
 .bsp
 .cache/
 .history/
 .lib/
+.metals/
+.vscode/
 dist/*
 target/
 lib_managed/
+metals.sbt
 src_managed/
 project/boot/
 project/plugins/project/

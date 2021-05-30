@@ -10,7 +10,7 @@ import org.jsoup.Jsoup
 import scala.util.control.Exception._
 
 class RedditImageViewerPlugin(config: Config = ConfigFactory.empty())
-  extends BaseContentPlugin(config) {
+    extends BaseContentPlugin(config) {
 
   override val pluginName = "RedditImageViewerPlugin"
   override val author = "fntz <mike.fch1@gmail.com>"
@@ -21,17 +21,19 @@ class RedditImageViewerPlugin(config: Config = ConfigFactory.empty())
 
   override val contentType = Image
 
-  /**
-    * Default setting:
+  /** Default setting:
     * RedditImageViewerPlugin {
     *  r = [gifs, diy, EducationalGifs]
     * }
     */
 
-  private val defaultConfig = ConfigFactory.load(getClass.getClassLoader, "default")
+  private val defaultConfig = ConfigFactory
+    .load(getClass.getClassLoader, "default")
     .getConfig(pluginName)
 
-  private val need = catching(classOf[Exception]) either config.getConfig(pluginName).withFallback(defaultConfig) fold(
+  private val need = catching(classOf[Exception]) either config
+    .getConfig(pluginName)
+    .withFallback(defaultConfig) fold (
     _ => defaultConfig,
     identity
   )
@@ -41,7 +43,7 @@ class RedditImageViewerPlugin(config: Config = ConfigFactory.empty())
   private val baseHost = "www.reddit.com"
   private val sources = need.getAnyRefList(configKey).toArray.mkString("|")
 
-  private val rx = ("""(?i)\/r\/("""+sources+""")\/comments\/.+""").r
+  private val rx = ("""(?i)\/r\/(""" + sources + """)\/comments\/.+""").r
 
   override def matchUrl(url: URL): Boolean = {
     if (url.getHost == baseHost) {
@@ -74,8 +76,7 @@ class RedditImageViewerPlugin(config: Config = ConfigFactory.empty())
                 Right(Some(result))
               }
             )
-          }
-          else if (href.contains("gfycat.com")) {
+          } else if (href.contains("gfycat.com")) {
             catching(classOf[Exception]) either gfycatise(href) fold (
               err => {
                 Left(Errors.UnexpectedError(err.getMessage))
@@ -84,8 +85,7 @@ class RedditImageViewerPlugin(config: Config = ConfigFactory.empty())
                 Right(Some(result))
               }
             )
-          }
-          else {
+          } else {
             if (href.startsWith("/")) {
               Right(Some(top.select(".usertext-body").html()))
             } else {
@@ -106,32 +106,25 @@ class RedditImageViewerPlugin(config: Config = ConfigFactory.empty())
   // check gallery -> http://imgur.com/gallery/UADVg
   // check if it's image -> http://imgur.com/ha9zdcp
   private def imgurise(url: String): String = {
-    if (url.endsWith(".gif") ||
-        url.endsWith(".png") ||
-        url.endsWith(".jpg") ||
-        url.endsWith(".jpeg")
+    if (
+      url.endsWith(".gif") ||
+      url.endsWith(".png") ||
+      url.endsWith(".jpg") ||
+      url.endsWith(".jpeg")
     ) {
       s"<img src='$url'>"
     } else {
       val body = Jsoup.connect(url).get().body()
       if (url.contains("/gallery/")) {
         body.select(".post-image").html()
-      }
-      else if (url.contains("/a/")) {
+      } else if (url.contains("/a/")) {
         body.select(".post-images").html()
-      }
-      else if (!new URL(url).getPath.contains(".")) {
+      } else if (!new URL(url).getPath.contains(".")) {
         body.select(".post-image").html()
-      }
-      else {
+      } else {
         body.html().replaceAll("//", "http://")
       }
     }
   }
 
 }
-
-
-
-
-

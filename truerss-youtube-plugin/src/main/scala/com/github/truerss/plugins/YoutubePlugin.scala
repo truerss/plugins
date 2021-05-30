@@ -5,8 +5,7 @@ import com.github.truerss.base.ContentTypeParam.{RequestParam, HtmlRequest, UrlR
 import com.github.truerss.base.{ContentTypeParam, Video, BaseContentPlugin, Errors}
 import com.typesafe.config.{Config, ConfigFactory}
 
-class YoutubePlugin(config: Config = ConfigFactory.empty)
-  extends BaseContentPlugin(config) {
+class YoutubePlugin(config: Config = ConfigFactory.empty) extends BaseContentPlugin(config) {
 
   override val pluginName = "YoutubePlugin"
   override val author = "fntz <mike.fch1@gmail.com>"
@@ -44,8 +43,3 @@ class YoutubePlugin(config: Config = ConfigFactory.empty)
   }
 
 }
-
-
-
-
-
