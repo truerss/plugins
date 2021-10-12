@@ -15,7 +15,7 @@ class RedditImageViewerPlugin(config: Config = ConfigFactory.empty())
   override val pluginName = "RedditImageViewerPlugin"
   override val author = "fntz <mike.fch1@gmail.com>"
   override val about = "See images from imgur or gfycat in feed"
-  override val version = "0.0.1"
+  override val version = "1.0.1"
   override val contentTypeParam = ContentTypeParam.HTML
   override val priority = 10
 

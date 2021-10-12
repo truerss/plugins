@@ -10,7 +10,7 @@ class YoutubePlugin(config: Config = ConfigFactory.empty) extends BaseContentPlu
   override val pluginName = "YoutubePlugin"
   override val author = "fntz <mike.fch1@gmail.com>"
   override val about = "Embed Youtube Video"
-  override val version = "0.0.1"
+  override val version = "1.0.1"
 
   override val contentType = Video
   override val priority = 10

@@ -15,7 +15,7 @@ class TumblrPlugin(config: Config = ConfigFactory.empty) extends BaseContentPlug
   override val pluginName = "TumblrPlugin"
   override val author = "fntz <mike.fch1@gmail.com>"
   override val about = "Get image or content from tumblr post"
-  override val version = "0.0.1"
+  override val version = "1.0.1"
 
   override val contentType = Unknown
   override val priority = 10

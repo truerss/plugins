@@ -1,6 +1,6 @@
 ThisBuild / scalaVersion := "2.13.6"
 
-ThisBuild / version := "1.0.2"
+ThisBuild / version := "1.0.3"
 ThisBuild / organization := "io.github.truerss"
 sonatypeRepository := "https://s01.oss.sonatype.org/service/local"
 sonatypeCredentialHost := "s01.oss.sonatype.org"
@@ -24,9 +24,9 @@ ThisBuild / licenses += ("MIT", url("http://opensource.org/licenses/MIT"))
 val basePluginSetting = Seq(scalacOptions ++= Seq("-Xlog-free-terms", "-deprecation", "-feature"))
 
 val config = "com.typesafe" % "config" % "1.4.1"
-val jsoup = "org.jsoup" % "jsoup" % "1.8.3"
-val enumeratum = "com.beachape" %% "enumeratum" % "1.6.1"
-val enumeratumPlayJson = "com.beachape" %% "enumeratum-play-json" % "1.6.3"
+val jsoup = "org.jsoup" % "jsoup" % "1.14.3"
+val enumeratum = "com.beachape" %% "enumeratum" % "1.7.0"
+val enumeratumPlayJson = "com.beachape" %% "enumeratum-play-json" % "1.7.0"
 val utest = "com.lihaoyi" %% "utest" % "0.7.9"
 
 ThisBuild / libraryDependencies += utest % Test
@@ -43,7 +43,12 @@ val basePlugin = Project(id = "base", base = file("base"))
   .disablePlugins(sbtassembly.AssemblyPlugin)
 
 val pluginSettings = Seq(
-  assembly / assemblyOption := (assembly / assemblyOption).value.copy(includeScala = false),
+  assembly / assemblyOption := (assembly / assemblyOption).value
+    .withIncludeScala(false),
+  assembly / assemblyMergeStrategy := {
+    case x if x.endsWith("module-info.class") => MergeStrategy.discard
+    case x => MergeStrategy.defaultMergeStrategy(x)
+  },
   organization := "io.github.truerss",
   licenses += ("MIT", url("http://opensource.org/licenses/MIT"))
 )
@@ -53,31 +58,31 @@ def plugin(pluginName: String): Project = Project(id = pluginName, base = file(p
     assembly / target := file("."),
     pluginSettings ++ Seq(name := pluginName, assembly / assemblyJarName := s"$pluginName.jar")
   )
-  .dependsOn(basePlugin)
+  .dependsOn(basePlugin % "provided")
 
 lazy val redditImageViewerPlugin =
   plugin("truerss-reddit-imageviewer-plugin")
     .settings(
-      version := "1.0.0",
+      version := "1.0.1",
       libraryDependencies ++= Seq(config, jsoup, "org.scalaj" %% "scalaj-http" % "2.4.2")
     )
 
 lazy val stackoverflowPlugin =
   plugin("truerss-stackoverflow-plugin")
-    .settings(version := "1.0.0", libraryDependencies ++= Seq(config, jsoup))
+    .settings(version := "1.0.1", libraryDependencies ++= Seq(config, jsoup))
 
 lazy val tumblrPlugin = plugin("truerss-tumblr-plugin")
   .settings(
-    version := "1.0.0",
+    version := "1.0.1",
     libraryDependencies ++= Seq(config, "com.tumblr" % "jumblr" % "0.0.11")
   )
 
 lazy val youtubePlugin = plugin("truerss-youtube-plugin")
-  .settings(version := "1.0.0", libraryDependencies ++= Seq(config))
+  .settings(version := "1.0.1", libraryDependencies ++= Seq(config))
 
 lazy val notifyPlugin = plugin("truerss-notify-plugin")
   .settings(
-    version := "1.0.0",
+    version := "1.0.1",
     libraryDependencies ++= Seq(config, "com.dorkbox" % "Notify" % "3.7")
   )
 

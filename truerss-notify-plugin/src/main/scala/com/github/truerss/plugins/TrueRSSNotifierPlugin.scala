@@ -16,7 +16,7 @@ class TrueRSSNotifierPlugin(config: Config = ConfigFactory.empty())
   override val author: String = "fntz <mike.fch1@gmail.com>"
   override val about: String = "Publish notification about new entries"
   override val pluginName: String = "TrueRSSNotifierPlugin"
-  override val version: String = "0.0.1"
+  override val version: String = "1.0.1"
 
   private val defaultConfig =
     ConfigFactory
@@ -37,10 +37,8 @@ class TrueRSSNotifierPlugin(config: Config = ConfigFactory.empty())
   private val every = 30
   private val exec = Executors.newSingleThreadScheduledExecutor(new TrueRSSNotifierThreadFactory)
   exec.scheduleAtFixedRate(
-    new Runnable {
-      override def run(): Unit = {
-        tryToPublish()
-      }
+    () => {
+      tryToPublish()
     },
     0,
     every,

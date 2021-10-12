@@ -31,7 +31,7 @@ class StackoverflowPlugin(config: Config = ConfigFactory.empty())
   override val pluginName = "StackoverflowPlugin"
   override val author = "fntz <mike.fch1@gmail.com>"
   override val about = "Read stackexchange questions and answers"
-  override val version = "0.0.1"
+  override val version = "1.0.1"
   override val contentTypeParam = ContentTypeParam.HTML
   override val priority = 10
 
