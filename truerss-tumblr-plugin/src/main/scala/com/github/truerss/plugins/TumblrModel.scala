@@ -105,8 +105,8 @@ object TumblrModel {
   object Converter {
     import scala.jdk.CollectionConverters._
     def convert(x: P): Post = {
-      //text, quote, link, answer, video, audio, photo, chat
-      x.getType.toLowerCase match {
+      // text, quote, link, answer, video, audio, photo, chat
+      x.getType.getValue.toLowerCase match {
         case "text" =>
           val t = x.asInstanceOf[TP]
           TextPost(t.getTitle, t.getBody)

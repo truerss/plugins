@@ -9,7 +9,8 @@ trait BaseFeedReader {
 
   /** Return list of last entries for given site
     * @param url
-    * @return List[Entry]
+    * @return
+    *   List[Entry]
     */
   def newEntries(url: String): Either[Error, Vector[Entry]]
 }

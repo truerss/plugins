@@ -1,6 +1,6 @@
 package com.github.truerss.plugins
 
-import java.net.URL
+import java.net.URI
 import com.github.truerss.base.ContentTypeParam.{RequestParam, HtmlRequest, UrlRequest}
 import com.github.truerss.base.{ContentTypeParam, Video, BaseContentPlugin, Errors}
 import com.typesafe.config.{Config, ConfigFactory}
@@ -10,7 +10,7 @@ class YoutubePlugin(config: Config = ConfigFactory.empty) extends BaseContentPlu
   override val pluginName = "YoutubePlugin"
   override val author = "fntz <mike.fch1@gmail.com>"
   override val about = "Embed Youtube Video"
-  override val version = "1.0.1"
+  override val version = "1.1.0"
 
   override val contentType = Video
   override val priority = 10
@@ -18,7 +18,7 @@ class YoutubePlugin(config: Config = ConfigFactory.empty) extends BaseContentPlu
 
   private val links = Vector("youtube.com", "youtu.be", "y2u.be")
 
-  override def matchUrl(url: URL) = {
+  override def matchUrl(url: URI) = {
     val host = url.getHost
     if (links.exists(x => host.endsWith(x))) {
       true

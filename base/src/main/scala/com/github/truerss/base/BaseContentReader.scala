@@ -1,7 +1,6 @@
 package com.github.truerss.base
 
 import scala.util.Either
-import java.net.URL
 
 trait BaseContentReader {
   self: Priority with UrlMatcher with ConfigProvider with ContentType =>

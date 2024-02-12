@@ -1,12 +1,12 @@
 package com.github.truerss.plugins
 
-import dorkbox.notify.{Notify, Pos}
+import dorkbox.notify.{Notify, Position, Theme}
 
 import java.awt.{SystemTray, Toolkit, TrayIcon}
 import java.awt.TrayIcon.MessageType
 
 sealed trait OsNotification {
-  def position: Pos
+  def position: Position
   def isDark: Boolean
 
   def push(): Unit = {
@@ -18,19 +18,19 @@ object OsNotification {
   val title = "TrueRSS"
   val text = "New Entries Received."
 
-  def pushDefault(position: Pos, isDark: Boolean): Unit = {
-    val notify = Notify
+  def pushDefault(position: Position, isDark: Boolean): Unit = {
+    val notify = Notify.Companion
       .create()
       .title(title)
       .text(text)
       .position(position)
     if (isDark) {
-      notify.darkStyle()
+      notify.setTheme(Theme.Companion.getDefaultDark())
     }
     notify.showInformation()
   }
 
-  def apply(pos: Pos, mode: Boolean): OsNotification = {
+  def apply(pos: Position, mode: Boolean): OsNotification = {
     Option(System.getProperty("os.name")) match {
       case Some("Linux") =>
         Linux(pos, mode)
@@ -43,7 +43,7 @@ object OsNotification {
 
       case _ =>
         new OsNotification {
-          override val position: Pos = pos
+          override val position: Position = pos
 
           override val isDark: Boolean = mode
         }
@@ -51,7 +51,7 @@ object OsNotification {
   }
 }
 
-case class Linux(position: Pos, isDark: Boolean) extends OsNotification {
+case class Linux(position: Position, isDark: Boolean) extends OsNotification {
   import OsNotification._
 
   private val commandText = Seq(Linux.command, title, text)
@@ -66,7 +66,7 @@ object Linux {
   val command = "notify-send"
 }
 
-case class Windows(position: Pos, isDark: Boolean) extends OsNotification {
+case class Windows(position: Position, isDark: Boolean) extends OsNotification {
   import OsNotification._
 
   override def push(): Unit = {
@@ -87,7 +87,7 @@ object Windows {
   val icon = "icon.png"
 }
 
-case class MacOs(position: Pos, isDark: Boolean) extends OsNotification {
+case class MacOs(position: Position, isDark: Boolean) extends OsNotification {
   import OsNotification._
 
   private val command =

@@ -7,13 +7,11 @@ import scala.util.control.Exception._
 import com.github.truerss.base.{BaseContentPlugin, ContentTypeParam, Errors, Text}
 import com.typesafe.config.{Config, ConfigFactory}
 
-import java.net.URL
+import java.net.URI
 import scala.jdk.CollectionConverters._
 
 class StackoverflowPlugin(config: Config = ConfigFactory.empty())
     extends BaseContentPlugin(config) {
-
-  import Errors._
 
   private val onlyQuestion = "onlyQuestion"
   private val onlyBestAnswer = "onlyBestAnswer"
@@ -21,17 +19,13 @@ class StackoverflowPlugin(config: Config = ConfigFactory.empty())
 
   /** Default setting:
     *
-    * StackoverflowPlugin {
-    *   onlyQuestion = false
-    *   onlyBestAnswer = false
-    *   allAnswers = true
-    * }
+    * StackoverflowPlugin { onlyQuestion = false onlyBestAnswer = false allAnswers = true }
     */
 
   override val pluginName = "StackoverflowPlugin"
   override val author = "fntz <mike.fch1@gmail.com>"
   override val about = "Read stackexchange questions and answers"
-  override val version = "1.0.1"
+  override val version = "1.1.0"
   override val contentTypeParam = ContentTypeParam.HTML
   override val priority = 10
 
@@ -50,7 +44,7 @@ class StackoverflowPlugin(config: Config = ConfigFactory.empty())
 
   val rx = """/questions/[0-9]+/.+""".r
 
-  override def matchUrl(url: URL): Boolean = {
+  override def matchUrl(url: URI): Boolean = {
     if (sites.exists(url.toString.contains)) {
       rx.findFirstIn(url.toString).isDefined
     } else {
