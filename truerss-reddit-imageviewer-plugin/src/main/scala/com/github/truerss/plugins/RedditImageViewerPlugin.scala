@@ -1,6 +1,6 @@
 package com.github.truerss.plugins
 
-import java.net.URL
+import java.net.URI
 
 import com.github.truerss.base.ContentTypeParam.{HtmlRequest, RequestParam, UrlRequest}
 import com.github.truerss.base._
@@ -15,16 +15,13 @@ class RedditImageViewerPlugin(config: Config = ConfigFactory.empty())
   override val pluginName = "RedditImageViewerPlugin"
   override val author = "fntz <mike.fch1@gmail.com>"
   override val about = "See images from imgur or gfycat in feed"
-  override val version = "1.0.1"
+  override val version = "1.1.0"
   override val contentTypeParam = ContentTypeParam.HTML
   override val priority = 10
 
   override val contentType = Image
 
-  /** Default setting:
-    * RedditImageViewerPlugin {
-    *  r = [gifs, diy, EducationalGifs]
-    * }
+  /** Default setting: RedditImageViewerPlugin { r = [gifs, diy, EducationalGifs] }
     */
 
   private val defaultConfig = ConfigFactory
@@ -45,7 +42,7 @@ class RedditImageViewerPlugin(config: Config = ConfigFactory.empty())
 
   private val rx = ("""(?i)\/r\/(""" + sources + """)\/comments\/.+""").r
 
-  override def matchUrl(url: URL): Boolean = {
+  override def matchUrl(url: URI): Boolean = {
     if (url.getHost == baseHost) {
       rx.findFirstIn(url.toString).isDefined
     } else {
@@ -119,7 +116,7 @@ class RedditImageViewerPlugin(config: Config = ConfigFactory.empty())
         body.select(".post-image").html()
       } else if (url.contains("/a/")) {
         body.select(".post-images").html()
-      } else if (!new URL(url).getPath.contains(".")) {
+      } else if (!URI.create(url).getPath.contains(".")) {
         body.select(".post-image").html()
       } else {
         body.html().replaceAll("//", "http://")

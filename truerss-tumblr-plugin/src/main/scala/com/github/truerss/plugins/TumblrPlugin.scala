@@ -1,6 +1,6 @@
 package com.github.truerss.plugins
 
-import java.net.URL
+import java.net.URI
 
 import com.github.truerss.base.ContentTypeParam.{HtmlRequest, RequestParam, UrlRequest}
 import com.github.truerss.base.{BaseContentPlugin, ContentTypeParam, Errors, Unknown}
@@ -15,7 +15,7 @@ class TumblrPlugin(config: Config = ConfigFactory.empty) extends BaseContentPlug
   override val pluginName = "TumblrPlugin"
   override val author = "fntz <mike.fch1@gmail.com>"
   override val about = "Get image or content from tumblr post"
-  override val version = "1.0.1"
+  override val version = "1.1.0"
 
   override val contentType = Unknown
   override val priority = 10
@@ -32,7 +32,7 @@ class TumblrPlugin(config: Config = ConfigFactory.empty) extends BaseContentPlug
 
   private val links = Vector("tumblr.com")
 
-  override def matchUrl(url: URL) = {
+  override def matchUrl(url: URI) = {
     val host = url.getHost
     if (links.exists(x => host.endsWith(x)) && need.hasPath(apiKeyPath)) {
       true

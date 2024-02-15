@@ -1,7 +1,7 @@
 package com.github.truerss.base
 
-import java.net.URL
+import java.net.URI
 
 trait UrlMatcher {
-  def matchUrl(url: URL): Boolean
+  def matchUrl(url: URI): Boolean
 }

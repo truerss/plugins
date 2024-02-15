@@ -1,6 +1,5 @@
-project/project
-project/target
-target
+**/metals.sbt
+**/target/
 
 *.jar
 *.class
@@ -13,10 +12,7 @@ target
 .metals/
 .vscode/
 dist/*
-target/
 lib_managed/
-metals.sbt
-src_managed/
 project/boot/
 project/plugins/project/
 .idea/*

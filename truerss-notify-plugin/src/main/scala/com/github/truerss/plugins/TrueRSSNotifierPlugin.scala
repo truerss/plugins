@@ -2,7 +2,7 @@ package com.github.truerss.plugins
 
 import com.github.truerss.base.{BasePublishPlugin, Entry, PublishActions}
 import com.typesafe.config.{Config, ConfigFactory}
-import dorkbox.notify.Pos
+import dorkbox.notify.Position
 
 import java.util
 import java.util.concurrent.{Executors, ThreadFactory, TimeUnit}
@@ -16,7 +16,7 @@ class TrueRSSNotifierPlugin(config: Config = ConfigFactory.empty())
   override val author: String = "fntz <mike.fch1@gmail.com>"
   override val about: String = "Publish notification about new entries"
   override val pluginName: String = "TrueRSSNotifierPlugin"
-  override val version: String = "1.0.1"
+  override val version: String = "1.1.0"
 
   private val defaultConfig =
     ConfigFactory
@@ -68,8 +68,8 @@ class TrueRSSNotifierPlugin(config: Config = ConfigFactory.empty())
     }
   }
 
-  private def getPosition: Pos = {
-    positionMap.getOrElse(need.getString("position").toLowerCase.trim, Pos.TOP_RIGHT)
+  private def getPosition: Position = {
+    positionMap.getOrElse(need.getString("position").toLowerCase.trim, Position.TOP_RIGHT)
   }
 
   private def isDark: Boolean = {
@@ -81,11 +81,11 @@ class TrueRSSNotifierPlugin(config: Config = ConfigFactory.empty())
 object TrueRSSNotifierPlugin {
 
   val positionMap = Map(
-    "top-left" -> Pos.TOP_LEFT,
-    "top-right" -> Pos.TOP_RIGHT,
-    "center" -> Pos.CENTER,
-    "bottom-left" -> Pos.BOTTOM_LEFT,
-    "bottom-right" -> Pos.BOTTOM_RIGHT
+    "top-left" -> Position.TOP_LEFT,
+    "top-right" -> Position.TOP_RIGHT,
+    "center" -> Position.CENTER,
+    "bottom-left" -> Position.BOTTOM_LEFT,
+    "bottom-right" -> Position.BOTTOM_RIGHT
   )
 
   def toJava(xs: Iterable[Entry]): java.util.Collection[Entry] = {
