@@ -1,8 +1,3 @@
-# This workflow uses actions that are not certified by GitHub.
-# They are provided by a third-party and are governed by
-# separate terms of service, privacy policy, and support
-# documentation.
-
 name: Publish artifacts to Github Packages
 
 on:
@@ -27,10 +22,7 @@ jobs:
         distribution: 'temurin'
         cache: 'sbt'
 
-    - name: Run tests
-      run: sbt test
-
-    - name: Publish artifacts
-      run: sbt publish
+    - name: Run tests and publish artifacts
+      run: sbt test publish
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
