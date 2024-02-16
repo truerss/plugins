@@ -14,7 +14,7 @@ class YoutubePlugin(config: Config = ConfigFactory.empty) extends BaseContentPlu
 
   override val contentType = Video
   override val priority = 10
-  override val contentTypeParam = ContentTypeParam.URL
+  override val contentTypeParam = ContentTypeParam.URI
 
   private val links = Vector("youtube.com", "youtu.be", "y2u.be")
 

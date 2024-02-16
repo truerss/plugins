@@ -19,7 +19,7 @@ class TumblrPlugin(config: Config = ConfigFactory.empty) extends BaseContentPlug
 
   override val contentType = Unknown
   override val priority = 10
-  override val contentTypeParam = ContentTypeParam.URL
+  override val contentTypeParam = ContentTypeParam.URI
 
   private val apiKeyPath = "consumer_key"
 
