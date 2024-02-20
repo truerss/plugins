@@ -21,8 +21,13 @@ jobs:
         java-version: '21'
         distribution: 'temurin'
         cache: 'sbt'
+        server-id: ossrh
+        server-username: MAVEN_USERNAME
+        server-password: MAVEN_PASSWORD
 
     - name: Run tests and publish artifacts
       run: sbt test publish
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        MAVEN_USERNAME: ${{ secrets.MAVEN_USERNAME }}
+        MAVEN_PASSWORD: ${{ secrets.MAVEN_PASSWORD }}
