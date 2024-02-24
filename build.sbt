@@ -12,14 +12,26 @@ ThisBuild / publishTo := {
     Some("releases" at nexus + "service/local/staging/deploy/maven2")
 }
 
+ThisBuild / versionScheme := Some("pvp")
 ThisBuild / homepage := Some(url("https://github.com/truerss/truerss"))
 ThisBuild / scmInfo := Some(
   ScmInfo(url("https://github.com/truerss/plugins"), "git@github.com:truerss/plugins.git")
 )
 ThisBuild / developers := List(
-  Developer("mike", "mike", "mike.fch1@gmail.com", url("https://github.com/fntz"))
+  Developer("mike", "mike", "mike.fch1@gmail.com", url("https://github.com/fntz")),
 )
 ThisBuild / licenses += ("MIT", url("http://opensource.org/licenses/MIT"))
+
+(sys.env.get("MAVEN_USERNAME"), sys.env.get("MAVEN_PASSWORD")) match {
+  case (Some(username), Some(password)) =>
+    ConsoleLogger().info(
+      s"Using existing credentials"
+    )
+    ThisBuild / credentials += Credentials("Sonatype", sonatypeCredentialHost.value, username, password)
+  case _ =>
+    ConsoleLogger().info(s"No publishing credentials found.")
+    ThisBuild / credentials ++= Seq.empty
+ }
 
 val basePluginSetting = Seq(scalacOptions ++= Seq("-Xlog-free-terms", "-deprecation", "-feature"))
 
