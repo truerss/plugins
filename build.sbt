@@ -1,7 +1,7 @@
 ThisBuild / scalaVersion := "2.13.12"
 
 ThisBuild / version := "1.1.0"
-ThisBuild / organization := "io.github.truerss"
+ThisBuild / organization := "io.github.dlinov"
 sonatypeRepository := "https://s01.oss.sonatype.org/service/local"
 sonatypeCredentialHost := "s01.oss.sonatype.org"
 ThisBuild / publishTo := {
@@ -49,7 +49,7 @@ val pluginSettings = Seq(
     case x if x.endsWith("module-info.class") => MergeStrategy.discard
     case x => MergeStrategy.defaultMergeStrategy(x)
   },
-  organization := "io.github.truerss",
+  organization := (ThisBuild / version).value,
   licenses += ("MIT", url("http://opensource.org/licenses/MIT"))
 )
 
