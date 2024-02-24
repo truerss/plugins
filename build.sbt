@@ -27,7 +27,7 @@ ThisBuild / licenses += ("MIT", url("http://opensource.org/licenses/MIT"))
     ConsoleLogger().info(
       s"Using existing credentials"
     )
-    ThisBuild / credentials += Credentials("Sonatype", sonatypeCredentialHost.value, username, password)
+    ThisBuild / credentials += Credentials("Sonatype Nexus Repository Manager", sonatypeCredentialHost.value, username, password)
   case _ =>
     ConsoleLogger().info(s"No publishing credentials found.")
     ThisBuild / credentials ++= Seq.empty
