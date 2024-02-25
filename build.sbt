@@ -11,6 +11,7 @@ ThisBuild / scmInfo := Some(
 )
 ThisBuild / developers := List(
   Developer("mike", "mike", "mike.fch1@gmail.com", url("https://github.com/fntz")),
+  Developer("dlinov", "Dzmitryi Linou", "dmitry.linov.4gplus@gmail.com", url("https://github.com/dlinov")),
 )
 ThisBuild / licenses += ("MIT", url("http://opensource.org/licenses/MIT"))
 
