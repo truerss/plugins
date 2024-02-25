@@ -1,4 +1,7 @@
-
+## Release cycle
+- Develop your feature in the branch
+- Create PR and merge to master
+- If it's time to publish new binaries - push new tag of pattern `vX.Y.Z`. It will be picked up by [sbt-ci-release](https://github.com/sbt/sbt-ci-release) and pushed to Sonatype
 
 ### base
 
@@ -43,7 +46,7 @@ TumblrPlugin = {
 }
 ```
 
-# truerss-notifier-plugin
+### truerss-notifier-plugin
 
 Push notification about new entries.
 
